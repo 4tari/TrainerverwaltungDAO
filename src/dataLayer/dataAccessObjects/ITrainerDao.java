@@ -1,4 +1,4 @@
-package dataLayer.dataAcessObjects;
+package dataLayer.dataAccessObjects;
 
 import java.util.List;
 
