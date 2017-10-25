@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 public class TheJFrame{
 	private static void createAndShowGUI(){
 		// JFrame erzeugen
-		JFrame frame = new JFrame("Fußballmanager");
+		JFrame frame = new JFrame("Fuï¿½ballmanager");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//frame.setSize(800,600);
@@ -20,7 +20,7 @@ public class TheJFrame{
 		JLabel managerAge = new JLabel("Insert Age:");
 		JButton buttonSafe = new JButton("Speichern");
 
-		// ContentPane haelt standardmaeßig ein BorderLayout
+		// ContentPane haelt standardmaeï¿½ig ein BorderLayout
 		// Hinzufuegen der Buttons zum Content Pane des JFrames
 		frame.getContentPane().add(pageStart, BorderLayout.PAGE_START);
 		frame.getContentPane().add(managerName, BorderLayout.CENTER);
@@ -35,11 +35,11 @@ public class TheJFrame{
 
 	public static void main(String[] bla){
 		// Diese Operation muss aufgrund Swings Threading-policy 
-		// durchgeführt werden		
+		// durchgefï¿½hrt werden		
 		javax.swing.SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 				createAndShowGUI();
 			}
 		});
-	}
+  }
 }
