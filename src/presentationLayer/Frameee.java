@@ -1,37 +1,35 @@
 package presentationLayer;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.HeadlessException;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextPane;
 import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.Box;
-import javax.swing.JSplitPane;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
+import businessObjects.ITrainer;
+import dataLayer.dataAcessObjects.ITrainerDao;
+import dataLayer.dataAcessObjects.sqlite.TrainerDaoSqlite;
+
 import javax.swing.JLabel;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Frameee extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	ITrainer trainer = null;
 	Connection con;
 	Statement stmt;
 	ResultSet rs;
 	int currRow = 0;
+
+	private static ITrainerDao iTrainerDao;
 
 	private JPanel contentPane;
 	private JTextField textID;
@@ -47,44 +45,7 @@ public class Frameee extends JFrame {
 	 */
 	public Frameee() {
 		initComponents();
-		DoConnect();
-	}
-
-	public void DoConnect() {
-		try {
-			// CONNECT TO DATABASE
-			String host = "jdbc:derby://localhost:1527/Trainers";
-			String uName = "admin";
-			String uPass = "admin";
-			con = DriverManager.getConnection(host, uName, uPass);
-
-			// EXECUTE SOME SQL AND LOAD THE RECORDS INTO THE RESULTSET
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			String sql = "SELECT * FROM Trainers";
-			rs = stmt.executeQuery(sql);
-
-			// MOVE THE CURSOR THE FIRST RECORD AND GET THE DATA
-			rs.next();
-			int id_col = rs.getInt("ID");
-			String id = Integer.toString(id_col);
-			String name = rs.getString("Name");
-			int alter_col = rs.getInt("Alter");
-			String alter = Integer.toString(alter_col);
-			int erfahrung_col = rs.getInt("Erfahrung");
-			String erfahrung = Integer.toString(erfahrung_col);
-
-			// DISPLAY THE FIRST RECORD IN THE TEXT FIELDS
-			textID.setText(id);
-			textName.setText(name);
-			textAlter.setText(alter);
-			textErfahrung.setText(erfahrung);
-
-		}
-		// Exception einbauen!!!
-		catch (exceptions.NoTrainerFoundException err) {
-			JOptionPane.showMessageDialog(Frameee.this, err.getMessage);
-		}
-
+		// DoConnect();
 	}
 
 	/**
@@ -96,6 +57,7 @@ public class Frameee extends JFrame {
 				try {
 					Frameee frame = new Frameee();
 					frame.setVisible(true);
+					iTrainerDao = new TrainerDaoSqlite();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -177,158 +139,41 @@ public class Frameee extends JFrame {
 
 		btnFirst.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					rs.first();
-					int id_col = rs.getInt("ID");
-					String id = Integer.toString(id_col);
-					String name = rs.getString("Name");
-					int alter_col = rs.getInt("Alter");
-					String alter = Integer.toString(alter_col);
-					int erfahrung_col = rs.getInt("Erfahrung");
-					String erfahrung = Integer.toString(erfahrung_col);
+				iTrainerDao.first();
 
-					textID.setText(id);
-					textName.setText(name);
-					textAlter.setText(alter);
-					textErfahrung.setText(erfahrung);
-				} /**
-					 * Exception einbauen!!! catch (exceptions.NoTrainerFoundException err) {
-					 * JOptionPane.showMessageDialog(Frameee.this, err.getMessage()); }
-					 */
-				// Auto
-				catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 			}
 		});
 		contentPane.add(btnFirst);
 
 		btnPrevious.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (rs.previous()) {
-						int id_col = rs.getInt("ID");
-						String id = Integer.toString(id_col);
-						String name = rs.getString("Name");
-						int alter_col = rs.getInt("Alter");
-						String alter = Integer.toString(alter_col);
-						int erfahrung_col = rs.getInt("Erfahrung");
-						String erfahrung = Integer.toString(erfahrung_col);
-
-						textID.setText(id);
-						textName.setText(name);
-						textAlter.setText(alter);
-						textErfahrung.setText(erfahrung);
-
-					} else {
-						rs.next();
-						JOptionPane.showMessageDialog(Frameee.this, "End of File");
-					}
-				} /**
-					 * //Exception einbauen!!! catch (exceptions.NoPreviousTrainerFoundException
-					 * err) { JOptionPane.showMessageDialog(Frameee.this, err.getMessage()); }
-					 */
-
-				catch (HeadlessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				iTrainerDao.previous(trainer);
 			}
 		});
 		contentPane.add(btnPrevious);
 
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					if (rs.next()) {
-						int id_col = rs.getInt("ID");
-						String id = Integer.toString(id_col);
-						String name = rs.getString("Name");
-						int alter_col = rs.getInt("Alter");
-						String alter = Integer.toString(alter_col);
-						int erfahrung_col = rs.getInt("Erfahrung");
-						String erfahrung = Integer.toString(erfahrung_col);
-
-						textID.setText(id);
-						textName.setText(name);
-						textAlter.setText(alter);
-						textErfahrung.setText(erfahrung);
-
-					} else {
-						rs.previous();
-						JOptionPane.showMessageDialog(Frameee.this, "End of File");
-					}
-				} /**
-					 * //Exception einbauen!!! catch (exceptions.NoNextTrainerFoundException err) {
-					 * JOptionPane.showMessageDialog(Frameee.this, err.getMessage()); }
-					 */
-				catch (HeadlessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				iTrainerDao.next(trainer);
 			}
 		});
+
 		contentPane.add(btnNext);
 
 		btnLast.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					rs.last();
-					int id_col = rs.getInt("ID");
-					String id = Integer.toString(id_col);
-					String name = rs.getString("Name");
-					int alter_col = rs.getInt("Alter");
-					String alter = Integer.toString(alter_col);
-					int erfahrung_col = rs.getInt("Erfahrung");
-					String erfahrung = Integer.toString(erfahrung_col);
+				iTrainerDao.last();
 
-					textID.setText(id);
-					textName.setText(name);
-					textAlter.setText(alter);
-					textErfahrung.setText(erfahrung);
-				} /**
-					 * //Exception einbauen!!! catch (exceptions.NoTrainerFoundException err) {
-					 * JOptionPane.showMessageDialog(Frameee.this, err.getMessage()); }
-					 */
-				catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 			}
 		});
 		contentPane.add(btnLast);
 
 		btnUpdateRecord.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = textName.getText();
-				String alter = textAlter.getText();
-				String erfahrung = textErfahrung.getText();
-				String id = textID.getText();
+				iTrainerDao.save(trainer);
 
-				int newAlter = Integer.parseInt(alter);
-				int newErfahrung = Integer.parseInt(erfahrung);
-
-				try {
-					rs.updateString("Name", name);
-					rs.updateInt("Alter", newAlter);
-					rs.updateInt("Erfahrung", newErfahrung);
-					rs.updateRow();
-					JOptionPane.showMessageDialog(Frameee.this, "Updated");
 				}
-
-				catch (SQLException err) {
-					System.out.println(err.getMessage());
-				}
-
-			}
-		});
+			});
 		contentPane.add(btnUpdateRecord);
 
 		btnNewRecord.addActionListener(new ActionListener() {
@@ -343,13 +188,17 @@ public class Frameee extends JFrame {
 
 				btnSaveRecord.setEnabled(true);
 				btnCancelNewRecord.setEnabled(true);
+				
+				iTrainerDao.create();
 			}
 		});
 		contentPane.add(btnNewRecord);
 
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				iTrainerDao.delete(trainer);
 			}
+			
 		});
 		contentPane.add(btnDelete);
 
@@ -365,13 +214,16 @@ public class Frameee extends JFrame {
 
 				btnSaveRecord.setEnabled(false);
 				btnCancelNewRecord.setEnabled(false);
+				iTrainerDao.delete(trainer);
 			}
 		});
 		contentPane.add(btnCancelNewRecord);
 
 		btnSaveRecord.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				iTrainerDao.save(trainer);
 			}
+			
 		});
 		contentPane.add(btnSaveRecord);
 	}
