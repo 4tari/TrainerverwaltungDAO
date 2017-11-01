@@ -32,8 +32,8 @@ public class DataLayerSqlite implements IDataLayer
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
 
-//            statement.executeUpdate("DROP TABLE IF EXISTS person");
-//            statement.executeUpdate("CREATE TABLE person ('id' INTEGER PRIMARY KEY, 'name' STRING, 'alter' INTEGER, 'erfahrung' INTEGER)");
+            statement.executeUpdate("DROP TABLE IF EXISTS Trainers");
+            statement.executeUpdate("CREATE TABLE Trainers ('id' INTEGER PRIMARY KEY, 'name' STRING, 'alter' INTEGER, 'erfahrung' INTEGER)");
             
             System.out.println("Connection to SQLite has been established.");
             

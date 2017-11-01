@@ -1,0 +1,278 @@
+package de.szut.dataLayer.dataAccessObjects.sqlite;
+
+import de.szut.businessObjects.ITrainer;
+import de.szut.dataLayer.dataAccessObjects.ITrainerDao;
+
+import java.util.List;
+
+public class TrainerDaoSqlite implements ITrainerDao {
+    // todo: initialisieren, wenn ja wo?
+    private final String CLASSNAME = "org.sqlite.JDBC";
+    private final String CONNECTIONSTRING = "jdbc:sqlite:trainer.db";
+
+    @Override
+    public ITrainer create() {
+        return null;
+    }
+
+    @Override
+    public void delete(ITrainer trainer) {
+//        DELETE FROM trainer WHERE id=1;
+    }
+
+    @Override
+    public ITrainer first() {
+//        SELECT * FROM  trainer WHERE id=(SELECT MIN(id) FROM trainer);
+        return null;
+    }
+
+    @Override
+    public ITrainer last() {
+//        SELECT * FROM  trainer WHERE id=(SELECT MAX(id) FROM trainer);
+        return null;
+    }
+
+    @Override
+    public ITrainer next(ITrainer trainer) {
+//        int cur_id = trainer.getId();
+//        SELECT * FROM  trainer WHERE id=(SELECT MIN(id) FROM trainer WHERE id > cur_id);
+        return null;
+    }
+
+    @Override
+    public ITrainer previous(ITrainer trainer) {
+//        int cur_id = trainer.getId();
+//        SELECT * FROM  trainer WHERE id=(SELECT MAX(id) FROM trainer WHERE id < cur_id);
+
+        return null;
+    }
+
+    @Override
+    public void save(ITrainer trainer) {
+//        INSERT INTO trainer(id, name, "alter", erfahrung) VALUES (2, "b", 2, 2);
+    }
+
+    @Override
+    public List<ITrainer> select() {
+//        SELECT * FROM  trainer;
+        return null;
+    }
+
+    @Override
+    public ITrainer select(int id) {
+//        SELECT * FROM  trainer WHERE id=5;
+        return null;
+    }
+}
+//------------------------------------------------------------------------------------------------------------------
+
+package de.szut;
+
+import de.szut.businessObjects.ITrainer;
+import de.szut.dataLayer.DataLayerManager;
+import de.szut.dataLayer.businessObjects.Trainer;
+
+import de.szut.dataLayer.dataAccessObjects.xml.TrainerDaoXml;
+import de.szut.dataLayer.settings.PersistenceSettings;
+import de.szut.dataLayer.settings.SettingsManager;
+import org.jdom2.JDOMException;
+import org.w3c.dom.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Test {
+    public static void main(String[] args) {
+        new Test().testXml();
+    }
+
+    private void testXml(){
+        TrainerDaoXml daoXml = new TrainerDaoXml();
+        
+        Trainer t1 = new Trainer();
+        t1.setId(1);
+        t1.setName("a");
+        t1.setAlter(1);
+        t1.setErfahrung(1);
+        
+        Trainer t2 = new Trainer();
+        t2.setId(2);
+        t2.setName("b");
+        t2.setAlter(2);
+        t2.setErfahrung(3);        
+        
+        daoXml.save((ITrainer) t1);
+        daoXml.save((ITrainer) t2);
+    }
+
+
+    private void test(){
+        SettingsManager sm = SettingsManager.getInstance();
+
+        PersistenceSettings ps = sm.getPersistenceSettings();
+
+        try {
+            if (ps.getPersistenceType().equals("xml")){
+                ps.setPersistenceType("xml");
+            }
+            else if (ps.getPersistenceType().equals("sqlite")){
+                ps.setPersistenceType("sqlite");
+            }
+
+            else {
+                throw new Exception("else");
+            }
+        }
+
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+        System.out.println(ps.getPersistenceType());
+    }
+
+//
+// SQLite-Verbindung
+//
+    private void doWork() {
+        System.out.println("Test");
+
+//        Trainer trainer = new Trainer();
+//        trainer.setId(1);
+//        trainer.setName("name1");
+//        trainer.setAlter(1);
+//        trainer.setErfahrung(1);
+//
+//        System.out.println("\nTrainer #1\n");
+//        System.out.println("id: " + trainer.getId());
+//        System.out.println("Name: " + trainer.getName());
+//        System.out.println("Alter: " + trainer.getAlter());
+//        System.out.println("Erfahrung: " + trainer.getErfahrung());
+
+
+
+        // Datenbankklasse dynamisch erzeugen.
+        try {
+            Class.forName ("org.sqlite.JDBC");
+        }
+
+        catch (ClassNotFoundException e){
+            e.getMessage();
+            System.out.println("ClassNotFoundException");
+        }
+
+
+        // Verbindung initialisieren.
+        String datei = "E://Programmierung//Java//TrainerverwaltungDAO//src//de//szut//test.db";
+
+        // Dateiname inklusive Pfad.
+        String url = "jdbc:sqlite:" + datei;
+        try {
+            Connection conn = DriverManager.getConnection(url);
+
+        }
+
+        catch (SQLException e) {
+            e.getMessage();
+        }
+    }
+
+    private void readConfigXml(){
+        try {
+            File fXmlFile = new File("C:\\xml\\config.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+            doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getElementsByTagName("persistence_type");
+            System.out.println(nList.item(0).getTextContent());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeConfigXml(){
+        try {
+            DocumentBuilderFactory dbFactory =
+                    DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.newDocument();
+
+            // root element config
+            Element rootElement = doc.createElement("config");
+            doc.appendChild(rootElement);
+
+            // persistence_type
+            Element persistenceType = doc.createElement("persistence_type");
+            rootElement.appendChild(persistenceType);
+            persistenceType.appendChild(doc.createTextNode("xml"));
+
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("C:\\xml\\config.xml"));
+            transformer.transform(source, result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeTrainerXml(){
+        try {
+            DocumentBuilderFactory dbFactory =
+                    DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.newDocument();
+
+            // root element trainers
+            Element rootElement = doc.createElement("trainers");
+            doc.appendChild(rootElement);
+
+            // trainer1 element
+            Element trainer = doc.createElement("trainer");
+            rootElement.appendChild(trainer);
+
+            Element id = doc.createElement("id");
+            id.appendChild(doc.createTextNode(Integer.toString(1)));
+            trainer.appendChild(id);
+
+            Element name = doc.createElement("name");
+            name.appendChild(doc.createTextNode("max"));
+            trainer.appendChild(name);
+
+            Element alter = doc.createElement("alter");
+            alter.appendChild(doc.createTextNode(Integer.toString(1)));
+            trainer.appendChild(alter);
+
+            Element erfahrung = doc.createElement("erfahrung");
+            erfahrung.appendChild(doc.createTextNode(Integer.toString(1)));
+            trainer.appendChild(erfahrung);
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("C:\\xml\\trainers.xml"));
+            transformer.transform(source, result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
