@@ -1,6 +1,5 @@
 package dataLayer.dataAccessObjects.sqlite;
 
-import java.awt.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,7 +20,7 @@ public class DataLayerSqlite implements IDataLayer
 
         try {
             // db parameters
-            String url = "jdbc:sqlite:sample.db";
+            String url = "jdbc:sqlite:trainer.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             
@@ -59,7 +58,7 @@ public class DataLayerSqlite implements IDataLayer
 		Statement stmt;
 		try {
 			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			String sql = "SELECT * FROM Trainers";
+			String sql = "SELECT * FROM trainer";
 			ResultSet rs = stmt.executeQuery(sql);
 			
 			ArrayList<Trainer> trainers = new ArrayList<Trainer>();

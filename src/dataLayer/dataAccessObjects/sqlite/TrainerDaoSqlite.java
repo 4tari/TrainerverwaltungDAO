@@ -1,9 +1,10 @@
 package dataLayer.dataAccessObjects.sqlite;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import businessObjects.ITrainer;
@@ -12,15 +13,47 @@ import dataLayer.dataAccessObjects.ITrainerDao;
 
 public class TrainerDaoSqlite implements ITrainerDao {
 
-	DataLayerSqlite connection;
-	
-	public TrainerDaoSqlite() {
-		connection = new DataLayerSqlite();
+	public Connection conn = null;
+	private Connection doConnect(){
 		
+		 // db parameters
+        String url = "jdbc:sqlite:trainer.db";
+        // create a connection to the database
+        try {
+			conn = DriverManager.getConnection(url);
+			Statement statement = conn.createStatement();
+	        statement.setQueryTimeout(30);  // set timeout to 30 sec.
+	        System.out.println("Connection to SQLite has been established.");
+	        return conn;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+        
+        
+
+       // connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+
+//        statement.executeUpdate("DROP TABLE IF EXISTS person");
+//        statement.executeUpdate("CREATE TABLE person ('id' INTEGER PRIMARY KEY, 'name' STRING, 'alter' INTEGER, 'erfahrung' INTEGER)");
+        
+
+	}
+	
+	private void disconnect(Connection conn){
+		try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
 	}
 	
 	public ITrainer create() {
-		// TODO Auto-generated method stub
+		System.out.print("create");
 		return null;
 	}
 
@@ -32,30 +65,25 @@ public class TrainerDaoSqlite implements ITrainerDao {
 	public ITrainer first() {
 		// TODO Auto-generated method stub
 		
-
+		doConnect();
 		Statement stmt;
 		try {
-			connection = new DataLayerSqlite();
-			stmt = connection.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			String sql = "SELECT * FROM Trainers";
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			String sql = "SELECT * FROM trainer";
 			ResultSet rs = stmt.executeQuery(sql);
-			
-			ArrayList<Trainer> trainers = new ArrayList<Trainer>();
-			while(rs.next())
-			{
-				Trainer trainer = new Trainer(rs.getInt("id"), rs.getString("name"), rs.getInt("alter"), rs.getInt("erfahrung"));
-				trainers.add(trainer);
-				System.out.print(rs.getString("name"));
-			}
-//			return trainers;
-			return null;
+			rs.next();
+			Trainer trainer = new Trainer(rs.getInt("id"), rs.getString("name"), rs.getInt("alter"), rs.getInt("erfahrung"));
+			System.out.print(rs.getString("name"));
+			disconnect(conn);
+			return trainer;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.print("TEST");
+		disconnect(conn);
 		return null;
+
 	}
 
 	public ITrainer last() {
