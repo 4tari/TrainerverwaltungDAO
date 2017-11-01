@@ -30,12 +30,6 @@ public class TrainerDaoSqlite implements ITrainerDao {
 			e.printStackTrace();
 			return null;
 		}
-        
-        
-
-       // connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
-
-
 //        statement.executeUpdate("DROP TABLE IF EXISTS person");
 //        statement.executeUpdate("CREATE TABLE person ('id' INTEGER PRIMARY KEY, 'name' STRING, 'alter' INTEGER, 'erfahrung' INTEGER)");
         
@@ -46,6 +40,7 @@ public class TrainerDaoSqlite implements ITrainerDao {
 		try {
             if (conn != null) {
                 conn.close();
+                System.out.println("Disconnected from Database");
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -68,12 +63,12 @@ public class TrainerDaoSqlite implements ITrainerDao {
 		doConnect();
 		Statement stmt;
 		try {
-			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			String sql = "SELECT * FROM trainer";
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM trainer WHERE id = 1";
 			ResultSet rs = stmt.executeQuery(sql);
 			rs.next();
 			Trainer trainer = new Trainer(rs.getInt("id"), rs.getString("name"), rs.getInt("alter"), rs.getInt("erfahrung"));
-			System.out.print(rs.getString("name"));
+			System.out.println(rs.getString("name"));
 			disconnect(conn);
 			return trainer;
 
