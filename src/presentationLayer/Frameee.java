@@ -11,17 +11,17 @@ import dataLayer.dataAccessObjects.sqlite.TrainerDaoSqlite;
 
 import javax.swing.JLabel;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Frameee extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	ITrainer trainer = null;
 	Connection con;
@@ -37,20 +37,11 @@ public class Frameee extends JFrame {
 	private JTextField textAlter;
 	private JTextField textErfahrung;
 
-	/**
-	 * Ad Connect method - Example
-	 */
-	/**
-	 * Create the frame.
-	 */
 	public Frameee() {
 		initComponents();
-		// DoConnect();
+		DoConnect();
 	}
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -63,6 +54,19 @@ public class Frameee extends JFrame {
 				}
 			}
 		});
+	}
+	public void DoConnect(){
+		Connection conn = null;
+        String url = "jdbc:sqlite:sample.db";
+        try {
+			conn = DriverManager.getConnection(url);
+	        Statement statement = conn.createStatement();
+	        statement.setQueryTimeout(30);  // set timeout to 30 sec.
+	        System.out.println("Connection to SQLite has been established.");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void initComponents() {
@@ -139,8 +143,8 @@ public class Frameee extends JFrame {
 
 		btnFirst.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				iTrainerDao.first();
-
+				trainer = iTrainerDao.first();
+				displayTrainer(trainer);
 			}
 		});
 		contentPane.add(btnFirst);
@@ -226,5 +230,19 @@ public class Frameee extends JFrame {
 			
 		});
 		contentPane.add(btnSaveRecord);
+	}
+	
+	public void displayTrainer(ITrainer trainer) {
+		int id_col = trainer.getId();
+		String id = Integer.toString(id_col);
+		String name = trainer.getName();
+		int alter_col = trainer.getAlter();
+		String alter = Integer.toString(alter_col);
+		int erfahrung_col = trainer.getErfahrung();
+		String erfahrung = Integer.toString(erfahrung_col);
+		textID.setText(id);
+		textName.setText(name);
+		textAlter.setText(alter);
+		textErfahrung.setText(erfahrung);
 	}
 }
