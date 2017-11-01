@@ -1,4 +1,4 @@
-package dataLayer.dataAcessObjects.sqlite;
+package dataLayer.dataAccessObjects.sqlite;
 
 import java.awt.List;
 import java.sql.Connection;
@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import dataLayer.dataAcessObjects.ITrainerDao;
+import dataLayer.dataAccessObjects.ITrainerDao;
 import dataLayer.IDataLayer;
 import dataLayer.businessObjects.Trainer;
 

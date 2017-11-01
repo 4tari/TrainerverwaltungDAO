@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import businessObjects.ITrainer;
-import dataLayer.dataAcessObjects.ITrainerDao;
-import dataLayer.dataAcessObjects.sqlite.TrainerDaoSqlite;
+import dataLayer.dataAccessObjects.ITrainerDao;
+import dataLayer.dataAccessObjects.sqlite.TrainerDaoSqlite;
 
 import javax.swing.JLabel;
 import java.sql.Connection;

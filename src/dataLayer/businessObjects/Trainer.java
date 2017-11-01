@@ -8,7 +8,7 @@ public class Trainer implements ITrainer{
 	private int alter;
 	private int erfahrung;
 	
-	Trainer(int id, String name, int alter, int erfahrung){
+	public Trainer(int id, String name, int alter, int erfahrung){
 		this.id = id;
 		this.name = name;
 		this.alter = alter;

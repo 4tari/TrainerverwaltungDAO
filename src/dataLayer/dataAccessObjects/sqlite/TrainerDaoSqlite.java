@@ -1,7 +1,5 @@
 package dataLayer.dataAccessObjects.sqlite;
 
-package dataLayer.dataAcessObjects.sqlite;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,7 +8,7 @@ import java.util.List;
 
 import businessObjects.ITrainer;
 import dataLayer.businessObjects.Trainer;
-import dataLayer.dataAcessObjects.*;
+import dataLayer.dataAccessObjects.ITrainerDao;
 
 public class TrainerDaoSqlite implements ITrainerDao {
 
