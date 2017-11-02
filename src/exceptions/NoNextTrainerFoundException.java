@@ -1,9 +1,7 @@
 package exceptions;
 
-public class NoNextTrainerFoundException {
-
+public class NoNextTrainerFoundException extends Exception{
 	public NoNextTrainerFoundException() {
-		// TODO Auto-generated constructor stub
+		super("NoNextTrainerFoundException");
 	}
-
 }
