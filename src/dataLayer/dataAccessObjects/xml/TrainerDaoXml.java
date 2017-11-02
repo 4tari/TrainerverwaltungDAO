@@ -1,7 +1,5 @@
 package dataLayer.dataAccessObjects.xml;
 
-package dataLayer.dataAccessObjects.xml;
-
 import businessObjects.ITrainer;
 import dataLayer.businessObjects.Trainer;
 import dataLayer.dataAccessObjects.ITrainerDao;
