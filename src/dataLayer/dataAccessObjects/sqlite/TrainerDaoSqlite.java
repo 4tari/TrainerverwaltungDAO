@@ -130,7 +130,7 @@ public class TrainerDaoSqlite implements ITrainerDao {
 		doConnect();
 		Statement stmt;
 		int cur_id = trainer.getId();
-		String sql = "SELECT * FROM trainer WHERE id =(SELECT MIN(id) FROM trainer WHERE id > 'cur_id')";
+		String sql = "SELECT * FROM trainer WHERE id =(SELECT MIN(id) FROM trainer WHERE id > " + cur_id + ")";
 		try {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
@@ -152,18 +152,17 @@ public class TrainerDaoSqlite implements ITrainerDao {
 		// TODO Auto-generated method stub
 		doConnect();
 		Statement stmt;
-		int number;
-		number = trainer.getId() - 1;
+		int cur_id = trainer.getId();
+		String sql = "SELECT * FROM trainer WHERE id =(SELECT MAX(id) FROM trainer WHERE id < " + cur_id + ")";
 		try {
 			stmt = conn.createStatement();
-			String sql = "SELECT * FROM trainer WHERE id =" + number;
 			ResultSet rs = stmt.executeQuery(sql);
 			rs.next();
-			Trainer nextTrainer = new Trainer(rs.getInt("id"), rs.getString("name"), rs.getInt("alter"),
+			Trainer prevTrainer = new Trainer(rs.getInt("id"), rs.getString("name"), rs.getInt("alter"),
 					rs.getInt("erfahrung"));
 			System.out.println(rs.getString("name"));
 			disconnect(conn);
-			return nextTrainer;
+			return prevTrainer;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
