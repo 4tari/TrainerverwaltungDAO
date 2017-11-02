@@ -1,14 +1,16 @@
 package dataLayer.settings;
 
 public class PersistenceSettings {
+    private String type;
 
-	public PersistenceSettings() {
-		// TODO Auto-generated constructor stub
-	}
+    public PersistenceSettings() {
+    }
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+    public String getPersistenceType() {
+        return type;
+    }
 
-	}
-
+    public void setPersistenceType(String type) {
+        this.type = type;
+    }
 }
