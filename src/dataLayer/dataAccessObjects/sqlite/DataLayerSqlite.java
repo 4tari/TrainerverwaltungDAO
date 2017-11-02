@@ -19,21 +19,16 @@ public class DataLayerSqlite implements IDataLayer
 	public DataLayerSqlite() {
 
         try {
-            // db parameters
             String url = "jdbc:sqlite:trainer.db";
-            // create a connection to the database
             conn = DriverManager.getConnection(url);
-            
-            
 
-           // connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
             Statement statement = conn.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
 
-            statement.executeUpdate("DROP TABLE IF EXISTS Trainers");
-            statement.executeUpdate("CREATE TABLE Trainers ('id' INTEGER PRIMARY KEY, 'name' STRING, 'alter' INTEGER, 'erfahrung' INTEGER)");
+//            statement.executeUpdate("DROP TABLE IF EXISTS Trainers");
+//            statement.executeUpdate("CREATE TABLE Trainers ('id' INTEGER PRIMARY KEY, 'name' STRING, 'alter' INTEGER, 'erfahrung' INTEGER)");
             
             System.out.println("Connection to SQLite has been established.");
             
@@ -53,8 +48,6 @@ public class DataLayerSqlite implements IDataLayer
 	
 
 	public ITrainerDao getTrainerDao() {
-		// TODO Auto-generated method stub
-
 		Statement stmt;
 		try {
 			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -71,18 +64,11 @@ public class DataLayerSqlite implements IDataLayer
 			return null;
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		String sql = "SELECT * FROM Trainers";
-//		rs = conn.executeQuery(sql);
+
 		
 		return null;
 	}
 	
-	
-	//public static void main(String[] args) throws ClassNotFoundException
-	//{
-	//}
 }
