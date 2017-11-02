@@ -6,16 +6,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import businessObjects.ITrainer;
+import dataLayer.businessObjects.Trainer;
 import dataLayer.dataAccessObjects.ITrainerDao;
 import dataLayer.dataAccessObjects.sqlite.TrainerDaoSqlite;
 
 import javax.swing.JLabel;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -39,7 +37,6 @@ public class Frameee extends JFrame {
 
 	public Frameee() {
 		initComponents();
-		DoConnect();
 	}
 
 	public static void main(String[] args) {
@@ -49,24 +46,12 @@ public class Frameee extends JFrame {
 					Frameee frame = new Frameee();
 					frame.setVisible(true);
 					iTrainerDao = new TrainerDaoSqlite();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}
-	public void DoConnect(){
-		Connection conn = null;
-        String url = "jdbc:sqlite:sample.db";
-        try {
-			conn = DriverManager.getConnection(url);
-	        Statement statement = conn.createStatement();
-	        statement.setQueryTimeout(30);  // set timeout to 30 sec.
-	        System.out.println("Connection to SQLite has been established.");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void initComponents() {
@@ -78,6 +63,7 @@ public class Frameee extends JFrame {
 		contentPane.setLayout(null);
 
 		textID = new JTextField();
+		textID.setEditable(false);
 		textID.setBounds(111, 62, 53, 20);
 		contentPane.add(textID);
 		textID.setColumns(10);
@@ -151,14 +137,16 @@ public class Frameee extends JFrame {
 
 		btnPrevious.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				iTrainerDao.previous(trainer);
+				trainer = iTrainerDao.previous(trainer);
+				displayTrainer(trainer);
 			}
 		});
 		contentPane.add(btnPrevious);
 
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				iTrainerDao.next(trainer);
+				trainer = iTrainerDao.next(trainer);
+				displayTrainer(trainer);
 			}
 		});
 
@@ -166,7 +154,8 @@ public class Frameee extends JFrame {
 
 		btnLast.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				iTrainerDao.last();
+				trainer = iTrainerDao.next(trainer);
+				displayTrainer(trainer);
 
 			}
 		});
@@ -174,8 +163,7 @@ public class Frameee extends JFrame {
 
 		btnUpdateRecord.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				iTrainerDao.save(trainer);
-
+				iTrainerDao.last();
 				}
 			});
 		contentPane.add(btnUpdateRecord);
@@ -193,7 +181,8 @@ public class Frameee extends JFrame {
 				btnSaveRecord.setEnabled(true);
 				btnCancelNewRecord.setEnabled(true);
 				
-				iTrainerDao.create();
+				trainer = iTrainerDao.create();
+				displayTrainer(trainer);
 			}
 		});
 		contentPane.add(btnNewRecord);
@@ -201,6 +190,7 @@ public class Frameee extends JFrame {
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				iTrainerDao.delete(trainer);
+//				System.out.println("Deleted");
 			}
 			
 		});
@@ -218,13 +208,21 @@ public class Frameee extends JFrame {
 
 				btnSaveRecord.setEnabled(false);
 				btnCancelNewRecord.setEnabled(false);
-				iTrainerDao.delete(trainer);
+				iTrainerDao.first();
 			}
 		});
 		contentPane.add(btnCancelNewRecord);
 
 		btnSaveRecord.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String id_col = textID.getText();
+				int id = Integer.parseInt(id_col);
+				String name = textName.getText();
+				String alter_col = textAlter.getText();
+				int alter = Integer.parseInt(alter_col);
+				String erfahrung_col = textErfahrung.getText();
+				int erfahrung = Integer.parseInt(erfahrung_col);
+				trainer = new Trainer(id, name, alter, erfahrung);
 				iTrainerDao.save(trainer);
 			}
 			
